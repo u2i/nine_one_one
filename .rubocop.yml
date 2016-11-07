@@ -4,6 +4,7 @@ AllCops:
   Exclude:
     - bin/**/*
     - db/**/*
+    - vendor/**/*
   TargetRubyVersion: 2.1
 
 Style/MultilineOperationIndentation:
