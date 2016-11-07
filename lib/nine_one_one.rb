@@ -24,7 +24,7 @@ module NineOneOne
   end
 
   def self.config
-    raise Errors::ConfigurationError, 'NineOneOne has not been configured!' if @config.nil?
+    raise ConfigurationError, 'NineOneOne has not been configured!' if @config.nil?
 
     @config
   end

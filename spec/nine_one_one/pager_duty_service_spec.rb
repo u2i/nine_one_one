@@ -19,7 +19,7 @@ describe NineOneOne::PagerDutyService do
 
       it 'raises an error' do
         expect { subject.trigger_event('INCIDENT_KEY', 'Description') }
-          .to raise_error(NineOneOne::Errors::IncidentReportingError)
+          .to raise_error(NineOneOne::IncidentReportingError)
       end
     end
   end

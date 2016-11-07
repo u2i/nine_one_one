@@ -1,8 +1,6 @@
 module NineOneOne
-  module Errors
-    class NineOneOneError < RuntimeError; end
+  class Error < RuntimeError; end
 
-    class ConfigurationError < NineOneOneError; end
-    class IncidentReportingError < NineOneOneError; end
-  end
+  class ConfigurationError < Error; end
+  class IncidentReportingError < Error; end
 end

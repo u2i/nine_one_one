@@ -11,19 +11,19 @@ module NineOneOne
     private
 
     def valid_send_pagers?
-      raise Errors::ConfigurationError, "Missing 'send_pagers' parameter" if send_pagers.nil?
+      raise ConfigurationError, "Missing 'send_pagers' parameter" if send_pagers.nil?
 
       unless [true, false].include?(send_pagers)
-        raise Errors::ConfigurationError, "Illegal 'send_pagers' value: #{send_pagers}"
+        raise ConfigurationError, "Illegal 'send_pagers' value: #{send_pagers}"
       end
 
-      raise Errors::ConfigurationError, "'send_pagers' is false but no logger given" if !send_pagers && logger.nil?
+      raise ConfigurationError, "'send_pagers' is false but no logger given" if !send_pagers && logger.nil?
     end
 
     # rubocop:disable Style/GuardClause
     def valid_logger?
       if logger && !logger.respond_to?(:error)
-        raise Errors::ConfigurationError, "Logger: #{logger.class} doesnt respond to #error"
+        raise ConfigurationError, "Logger: #{logger.class} doesnt respond to #error"
       end
     end
 
@@ -31,7 +31,7 @@ module NineOneOne
       return true unless send_pagers
 
       if pager_duty_integration_key.nil? || pager_duty_integration_key.empty?
-        raise Errors::ConfigurationError, "Missing 'pager_duty_integration_key' parameter"
+        raise ConfigurationError, "Missing 'pager_duty_integration_key' parameter"
       end
     end
     # rubocop:enable Style/GuardClause

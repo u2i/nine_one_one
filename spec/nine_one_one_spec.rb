@@ -39,7 +39,7 @@ describe NineOneOne do
 
   describe 'configuration' do
     it 'raises error when has not been configured' do
-      expect { NineOneOne.config }.to raise_error(NineOneOne::Errors::ConfigurationError)
+      expect { NineOneOne.config }.to raise_error(NineOneOne::ConfigurationError)
     end
 
     it 'accepts "send_pagers" param' do
@@ -57,7 +57,7 @@ describe NineOneOne do
           config.send_pagers = nil
           config.pager_duty_integration_key = 'key-123'
         end
-      end.to raise_error(NineOneOne::Errors::ConfigurationError)
+      end.to raise_error(NineOneOne::ConfigurationError)
     end
 
     it 'raises error when send_pagers is neither true nor false' do
@@ -66,7 +66,7 @@ describe NineOneOne do
           config.send_pagers = '123'
           config.pager_duty_integration_key = 'key-123'
         end
-      end.to raise_error(NineOneOne::Errors::ConfigurationError)
+      end.to raise_error(NineOneOne::ConfigurationError)
     end
 
     context 'when send_pagers is true' do
@@ -84,7 +84,7 @@ describe NineOneOne do
           NineOneOne.configure do |config|
             config.send_pagers = true
           end
-        end.to raise_error(NineOneOne::Errors::ConfigurationError)
+        end.to raise_error(NineOneOne::ConfigurationError)
       end
 
       it 'raises error if "pager_duty_integration_key" is null but send_pagers is blank' do
@@ -93,7 +93,7 @@ describe NineOneOne do
             config.send_pagers = true
             config.pager_duty_integration_key = ''
           end
-        end.to raise_error(NineOneOne::Errors::ConfigurationError)
+        end.to raise_error(NineOneOne::ConfigurationError)
       end
     end
 
@@ -103,7 +103,7 @@ describe NineOneOne do
           NineOneOne.configure do |config|
             config.send_pagers = false
           end
-        end.to raise_error(NineOneOne::Errors::ConfigurationError)
+        end.to raise_error(NineOneOne::ConfigurationError)
       end
 
       it 'expects logger to have #error method' do
@@ -114,7 +114,7 @@ describe NineOneOne do
             config.send_pagers = false
             config.logger = not_really_a_logger
           end
-        end.to raise_error(NineOneOne::Errors::ConfigurationError)
+        end.to raise_error(NineOneOne::ConfigurationError)
       end
     end
   end
