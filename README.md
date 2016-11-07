@@ -1,3 +1,11 @@
+[![Build](https://travis-ci.org/u2i/nine_one_one.svg?branch=master)](https://travis-ci.org/u2i/nine_one_one.svg?branch=master)
+[![Code
+Climate](https://codeclimate.com/repos/58207e5ee72dfa227600001d/badges/ecd3be37c49334786095/gpa.svg)](https://codeclimate.com/repos/58207e5ee72dfa227600001d/feed)
+[![Test
+Coverage](https://codeclimate.com/repos/58207e5ee72dfa227600001d/badges/ecd3be37c49334786095/coverage.svg)](https://codeclimate.com/repos/58207e5ee72dfa227600001d/coverage)
+[![Issue
+Count](https://codeclimate.com/repos/58207e5ee72dfa227600001d/badges/ecd3be37c49334786095/issue_count.svg)](https://codeclimate.com/repos/58207e5ee72dfa227600001d/feed)
+
 # NineOneOne
 
 Common notification logic for PagerDuty/Slack notifications.
