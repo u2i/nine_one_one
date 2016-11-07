@@ -7,7 +7,7 @@ describe NineOneOne do
 
   before { NineOneOne.instance_variable_set(:@config, nil) }
 
-  describe '.service' do
+  describe '.emergency_service' do
     before do
       NineOneOne.configure do |config|
         config.send_pagers = send_pagers
@@ -22,7 +22,7 @@ describe NineOneOne do
       let(:logger) { nil }
 
       it 'returns PagerDutyService' do
-        expect(NineOneOne.service).to be_a NineOneOne::PagerDutyService
+        expect(NineOneOne.emergency_service).to be_a NineOneOne::PagerDutyService
       end
     end
 
@@ -32,16 +32,43 @@ describe NineOneOne do
       let(:logger) { double('Logger', error: 'error!') }
 
       it 'returns LogService' do
-        expect(NineOneOne.service).to be_a NineOneOne::LogService
+        expect(NineOneOne.emergency_service).to be_a NineOneOne::LogService
+      end
+    end
+  end
+
+  describe '.notification_service' do
+    let(:logger) { double('Logger', error: 'error!', info: 'info!') }
+    let(:webhook_url) { 'url' }
+
+    subject { described_class.notification_service }
+
+    before do
+      NineOneOne.configure do |config|
+        config.slack_enabled = slack_enabled
+        config.webhook_url = webhook_url
+        config.logger = logger
+      end
+    end
+
+    context 'when slack is not enabled' do
+      let(:slack_enabled) { false }
+
+      it 'returns logging service' do
+        expect(subject).to be_a(NineOneOne::LogService)
+      end
+    end
+
+    context 'when slack is enabled' do
+      let(:slack_enabled) { true }
+
+      it 'returns slack service' do
+        expect(subject).to be_a(NineOneOne::SlackService)
       end
     end
   end
 
   describe 'configuration' do
-    it 'raises error when has not been configured' do
-      expect { NineOneOne.config }.to raise_error(NineOneOne::ConfigurationError)
-    end
-
     it 'accepts "send_pagers" param' do
       NineOneOne.configure do |config|
         config.send_pagers = true
@@ -98,14 +125,6 @@ describe NineOneOne do
     end
 
     context 'when send_pagers is false' do
-      it 'expects logger to be present' do
-        expect do
-          NineOneOne.configure do |config|
-            config.send_pagers = false
-          end
-        end.to raise_error(NineOneOne::ConfigurationError)
-      end
-
       it 'expects logger to have #error method' do
         not_really_a_logger = double
 
@@ -113,6 +132,18 @@ describe NineOneOne do
           NineOneOne.configure do |config|
             config.send_pagers = false
             config.logger = not_really_a_logger
+          end
+        end.to raise_error(NineOneOne::ConfigurationError)
+      end
+    end
+
+    context 'when slack is enabled' do
+      let(:slack_enabled) { true }
+
+      it 'raises error if webhook url is not set' do
+        expect do
+          NineOneOne.configure do |config|
+            config.slack_enabled = slack_enabled
           end
         end.to raise_error(NineOneOne::ConfigurationError)
       end

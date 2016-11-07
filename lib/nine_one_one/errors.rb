@@ -3,4 +3,5 @@ module NineOneOne
 
   class ConfigurationError < Error; end
   class IncidentReportingError < Error; end
+  class NotificationError < Error; end
 end

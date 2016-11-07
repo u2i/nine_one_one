@@ -1,0 +1,54 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://hooks.slack.com/services/XXX
+    body:
+      encoding: UTF-8
+      string: "{}"
+    headers:
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '15'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Content-Security-Policy:
+      - referrer no-referrer;
+      Date:
+      - Mon, 07 Nov 2016 14:24:58 GMT
+      Server:
+      - Apache
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Slack-Backend:
+      - h
+      X-Cache:
+      - Error from cloudfront
+      Via:
+      - 1.1 f1b35cbe93c48e0e0c7455d687610bf2.cloudfront.net (CloudFront)
+      X-Amz-Cf-Id:
+      - H1y7_rHExM9QlQqAVEF2t0e57d3qgAJx9QgUasuUD3nexiaxKHPjlg==
+    body:
+      encoding: UTF-8
+      string: invalid_payload
+    http_version: 
+  recorded_at: Mon, 07 Nov 2016 14:24:58 GMT
+recorded_with: VCR 3.0.3
