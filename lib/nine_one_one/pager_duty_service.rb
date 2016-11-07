@@ -20,9 +20,11 @@ module NineOneOne
         response.code.to_i
       end
 
+      # rubocop:disable Style/GuardClause
       unless response.is_a?(Net::HTTPSuccess)
         raise Errors::IncidentReportingError, "Failed to create PagerDuty event: #{response.body}"
       end
+      # rubocop:enable Style/GuardClause
     end
 
     private
