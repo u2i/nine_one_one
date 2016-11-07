@@ -1,4 +1,4 @@
-[![Build](https://travis-ci.org/u2i/nine_one_one.svg?branch=master)](https://travis-ci.org/u2i/nine_one_one.svg?branch=master)
+[![Build](https://travis-ci.org/u2i/nine_one_one.svg?branch=master)](https://travis-ci.org/u2i/nine_one_one)
 [![Code
 Climate](https://codeclimate.com/repos/58207e5ee72dfa227600001d/badges/ecd3be37c49334786095/gpa.svg)](https://codeclimate.com/repos/58207e5ee72dfa227600001d/feed)
 [![Test
