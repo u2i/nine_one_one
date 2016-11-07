@@ -1,0 +1,24 @@
+AllCops:
+  Include:
+    - '**/Rakefile'
+  Exclude:
+    - bin/**/*
+    - db/**/*
+  TargetRubyVersion: 2.1
+
+Style/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
+Style/Documentation:
+  Enabled: false
+
+Style/FormatString:
+  Enabled: false
+
+Style/WhileUntilModifier:
+  MaxLineLength: 120
+
+Metrics/LineLength:
+  Max: 120
+  Enabled: true
+
