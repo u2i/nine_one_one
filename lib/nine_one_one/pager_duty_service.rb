@@ -1,5 +1,3 @@
-require 'net/http'
-
 module NineOneOne
   class PagerDutyService
     BASE_HOST = 'events.pagerduty.com'.freeze
@@ -10,6 +8,7 @@ module NineOneOne
 
     def initialize(api_integration_key)
       @api_integration_key = api_integration_key
+      @http = Http.new(BASE_HOST)
     end
 
     def trigger_event(incident_key, description, details_hash = nil)
@@ -29,7 +28,7 @@ module NineOneOne
 
     private
 
-    attr_reader :api_integration_key
+    attr_reader :api_integration_key, :http
 
     def retry_on(value, retries_number)
       retry_number = 0
@@ -41,15 +40,10 @@ module NineOneOne
     end
 
     def make_request(description, details_hash, incident_key)
-      http = Net::HTTP.new(BASE_HOST)
-
       headers = { 'Content-Type' => 'application/json' }
       body = request_body(incident_key, description, details_hash)
 
-      request = Net::HTTP::Post.new(EVENT_ENDPOINT, headers)
-      request.body = body
-
-      http.request(request)
+      http.post(EVENT_ENDPOINT, body, headers)
     end
 
     def request_body(incident_key, description, details_hash)

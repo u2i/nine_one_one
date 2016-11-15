@@ -1,4 +1,5 @@
 require_relative './nine_one_one/errors'
+require_relative './nine_one_one/http'
 require_relative './nine_one_one/version'
 require_relative './nine_one_one/configuration'
 require_relative './nine_one_one/log_service'
