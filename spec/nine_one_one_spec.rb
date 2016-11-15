@@ -7,6 +7,14 @@ describe NineOneOne do
 
   before { NineOneOne.instance_variable_set(:@config, nil) }
 
+  describe 'default config' do
+    it 'is valid' do
+      config = NineOneOne.config
+
+      expect { config.validate }.not_to raise_error
+    end
+  end
+
   describe '.emergency_service' do
     before do
       NineOneOne.configure do |config|
