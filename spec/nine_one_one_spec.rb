@@ -157,4 +157,32 @@ describe NineOneOne do
       end
     end
   end
+
+  describe '.emergency' do
+    let(:emergency_service) { instance_double(NineOneOne::PagerDutyService) }
+    let(:incident_key) { 'ERROR_KEY' }
+    let(:message) { 'danger' }
+    let(:details_hash) { { why: 'I dont know' } }
+
+    it 'delegates sending to emergency service' do
+      allow(NineOneOne).to receive(:emergency_service).and_return(emergency_service)
+
+      expect(emergency_service).to receive(:trigger_event).with(incident_key, message, details_hash)
+
+      NineOneOne.emergency(incident_key, message, details_hash)
+    end
+  end
+
+  describe '.notification' do
+    let(:notification_service) { instance_double(NineOneOne::SlackService) }
+    let(:message) { 'alert' }
+
+    it 'delegates notification to notification service' do
+      allow(NineOneOne).to receive(:notification_service).and_return(notification_service)
+
+      expect(notification_service).to receive(:notify).with(message)
+
+      NineOneOne.notification(message)
+    end
+  end
 end

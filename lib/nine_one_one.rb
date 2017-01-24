@@ -36,4 +36,12 @@ module NineOneOne
   def self.config
     @config ||= Configuration.new
   end
+
+  def self.emergency(incident_key, description, details_hash = nil)
+    emergency_service.trigger_event(incident_key, description, details_hash)
+  end
+
+  def self.notification(message)
+    notification_service.notify(message)
+  end
 end
