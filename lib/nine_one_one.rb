@@ -41,7 +41,7 @@ module NineOneOne
     emergency_service.trigger_event(incident_key, description, details_hash)
   end
 
-  def self.notification(message)
+  def self.notify(message)
     notification_service.notify(message)
   end
 end

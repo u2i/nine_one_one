@@ -173,7 +173,7 @@ describe NineOneOne do
     end
   end
 
-  describe '.notification' do
+  describe '.notify' do
     let(:notification_service) { instance_double(NineOneOne::SlackService) }
     let(:message) { 'alert' }
 
@@ -182,7 +182,7 @@ describe NineOneOne do
 
       expect(notification_service).to receive(:notify).with(message)
 
-      NineOneOne.notification(message)
+      NineOneOne.notify(message)
     end
   end
 end
