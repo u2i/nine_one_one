@@ -29,9 +29,8 @@ module NineOneOne
 
     # rubocop:disable Style/GuardClause
     def validate_logger
-      if logger && !logger.respond_to?(:error)
-        raise ConfigurationError, "Logger: #{logger.class} doesnt respond to #error"
-      end
+      raise ConfigurationError, "Logger: #{logger.class} doesn't respond to #error" unless logger.respond_to?(:error)
+      raise ConfigurationError, "Logger: #{logger.class} doesn't respond to #info" unless logger.respond_to?(:info)
     end
 
     def validate_pager_duty_key

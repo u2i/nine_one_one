@@ -16,20 +16,16 @@ describe NineOneOne do
   end
 
   describe '.emergency_service' do
-    before do
-      NineOneOne.configure do |config|
-        config.send_pagers = send_pagers
-        config.pager_duty_integration_key = pager_key
-        config.logger = logger
-      end
-    end
-
     context 'when send_pagers is true' do
       let(:send_pagers) { true }
       let(:pager_key) { 'pager-key-123' }
-      let(:logger) { nil }
 
       it 'returns PagerDutyService' do
+        NineOneOne.configure do |config|
+          config.send_pagers = send_pagers
+          config.pager_duty_integration_key = pager_key
+        end
+
         expect(NineOneOne.emergency_service).to be_a NineOneOne::PagerDutyService
       end
     end
@@ -37,9 +33,15 @@ describe NineOneOne do
     context 'when send_pagers is false' do
       let(:send_pagers) { false }
       let(:pager_key) { nil }
-      let(:logger) { double('Logger', error: 'error!') }
+      let(:logger) { double('Logger', info: 'info', error: 'error') }
 
       it 'returns LogService' do
+        NineOneOne.configure do |config|
+          config.send_pagers = send_pagers
+          config.pager_duty_integration_key = pager_key
+          config.logger = logger
+        end
+
         expect(NineOneOne.emergency_service).to be_a NineOneOne::LogService
       end
     end
@@ -104,6 +106,32 @@ describe NineOneOne do
       end.to raise_error(NineOneOne::ConfigurationError)
     end
 
+    it 'expects logger to have #error method' do
+      not_really_a_logger = double
+
+      allow(not_really_a_logger).to receive(:info)
+
+      expect do
+        NineOneOne.configure do |config|
+          config.send_pagers = false
+          config.logger = not_really_a_logger
+        end
+      end.to raise_error(NineOneOne::ConfigurationError)
+    end
+
+    it 'expects logger to have #info method' do
+      not_really_a_logger = double
+
+      allow(not_really_a_logger).to receive(:error)
+
+      expect do
+        NineOneOne.configure do |config|
+          config.send_pagers = false
+          config.logger = not_really_a_logger
+        end
+      end.to raise_error(NineOneOne::ConfigurationError)
+    end
+
     context 'when send_pagers is true' do
       it 'accepts "pager_duty_integration_key" param' do
         NineOneOne.configure do |config|
@@ -127,19 +155,6 @@ describe NineOneOne do
           NineOneOne.configure do |config|
             config.send_pagers = true
             config.pager_duty_integration_key = ''
-          end
-        end.to raise_error(NineOneOne::ConfigurationError)
-      end
-    end
-
-    context 'when send_pagers is false' do
-      it 'expects logger to have #error method' do
-        not_really_a_logger = double
-
-        expect do
-          NineOneOne.configure do |config|
-            config.send_pagers = false
-            config.logger = not_really_a_logger
           end
         end.to raise_error(NineOneOne::ConfigurationError)
       end
