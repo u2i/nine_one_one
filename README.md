@@ -26,15 +26,34 @@ Or install it yourself as:
 
     $ gem install nine_one_one
 
-## Usage
+## Configuration
 
-Configure NineOneOne with:
+By default NineOneOne loggs notifications and emegencies to STDOUT. You can override default settings with:
 
 ```ruby
 NineOneOne.configure do |config|
+    # Use Pager Duty API for emergencies (defaults to false)
     config.send_pagers = true
-    config.pager_duty_integration_key = 'key-123'
+    config.pager_duty_integration_key = 'pager-api-key'
+
+    # Post notifications using Slack Webhook URL (defaults to false)
+    config.slack_enabled = true
+    config.slack_webhook_url = 'https://hooks.slack.com/services/XXX/YYY/ZZZ'
+
+    # Use custom logger - it must implement .info(string) and .error(string) methods
+    # Defaults to Logger.new(STDOUT)
+    config.logger = Logger.new('incidents.log') 
 end
+```
+
+## Usage
+
+```ruby
+# Send message to Slack channel or log it using logger depending on the `slack_enabled` config parameter
+NineOneOne.notify('Something happened!')
+
+# Send pager or log emergency using logger depending on the `send_pagers` config parameter
+NineOneOne.emergency('INCIDENT_KEY', 'Emergency message!', { optional_hash: 'with details' })
 ```
 
 ## Development
