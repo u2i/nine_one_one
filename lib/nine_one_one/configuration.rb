@@ -2,7 +2,7 @@ require 'logger'
 
 module NineOneOne
   class Configuration
-    attr_accessor :send_pagers, :pager_duty_integration_key, :slack_enabled, :webhook_url, :logger
+    attr_accessor :send_pagers, :pager_duty_integration_key, :slack_enabled, :slack_webhook_url, :logger
 
     def initialize
       self.send_pagers = false
@@ -40,14 +40,16 @@ module NineOneOne
         raise ConfigurationError, "Missing 'pager_duty_integration_key' parameter"
       end
     end
-    # rubocop:enable Style/GuardClause
 
     def validate_slack_enabled
       unless [true, false].include?(slack_enabled)
         raise ConfigurationError, "Illegal 'slack_enabled' value: #{slack_enabled}"
       end
 
-      raise ConfigurationError, 'Incorrect webhook URL' if slack_enabled && (webhook_url.nil? || webhook_url.empty?)
+      if slack_enabled && (slack_webhook_url.nil? || slack_webhook_url.empty?)
+        raise ConfigurationError, 'Incorrect Slack webhook URL'
+      end
     end
+    # rubocop:enable Style/GuardClause
   end
 end

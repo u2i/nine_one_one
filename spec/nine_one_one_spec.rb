@@ -49,14 +49,14 @@ describe NineOneOne do
 
   describe '.notification_service' do
     let(:logger) { double('Logger', error: 'error!', info: 'info!') }
-    let(:webhook_url) { 'url' }
+    let(:slack_webhook_url) { 'url' }
 
     subject { described_class.notification_service }
 
     before do
       NineOneOne.configure do |config|
         config.slack_enabled = slack_enabled
-        config.webhook_url = webhook_url
+        config.slack_webhook_url = slack_webhook_url
         config.logger = logger
       end
     end
@@ -163,7 +163,7 @@ describe NineOneOne do
     context 'when slack is enabled' do
       let(:slack_enabled) { true }
 
-      it 'raises error if webhook url is not set' do
+      it 'raises error if slack webhook url is not set' do
         expect do
           NineOneOne.configure do |config|
             config.slack_enabled = slack_enabled
