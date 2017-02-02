@@ -23,3 +23,7 @@ Metrics/LineLength:
   Max: 120
   Enabled: true
 
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+
