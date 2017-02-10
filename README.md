@@ -40,6 +40,12 @@ NineOneOne.configure do |config|
     config.slack_enabled = true
     config.slack_webhook_url = 'https://hooks.slack.com/services/XXX/YYY/ZZZ'
 
+    # Customize Slack username. If left blank NineOneOne will use the username specified in the Slack webkhook integration
+    config.slack_username = 'NineOneOne'
+
+    # Customize Slack channel. If left blank NineOneOne will use the channel specified in the Slack webkhook integration
+    config.slack_channel = '#my-notifications'
+
     # Use custom logger - it must implement .info(string) and .error(string) methods
     # Defaults to Logger.new(STDOUT)
     config.logger = Logger.new('incidents.log') 
