@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe NineOneOne::SlackService do
+RSpec.describe NineOneOne::SlackService do
   let(:webhook_url) { 'https://hooks.slack.com/services/XXX' }
 
   describe 'with no optional fields' do
