@@ -3,11 +3,11 @@ require 'spec_helper'
 describe NineOneOne::SlackService do
   let(:webhook_url) { 'https://hooks.slack.com/services/XXX' }
 
-  describe 'vcr test' do
+  describe 'with no optional fields' do
     subject { described_class.new(webhook_url) }
 
     describe 'when API call succeeds' do
-      use_vcr_cassette 'slack_notification_success', match_requests_on: [:body]
+      use_vcr_cassette 'slack_notification_success'
 
       it 'calls slack service with message' do
         expect(subject.notify('message')).to eq true
@@ -23,30 +23,30 @@ describe NineOneOne::SlackService do
     end
   end
 
-  describe 'using optional fields' do
-    let(:http) { instance_double(NineOneOne::Http) }
-
+  describe 'with optional fields' do
     subject { described_class.new(webhook_url, opts) }
 
-    before { expect(http).to receive(:post).with('/services/XXX', expected_body, Hash) }
-
     context 'with one optional field' do
-      let(:opts) { { http: http, username: 'NineOneOne' } }
+      use_vcr_cassette 'slack_notification_with_username'
+
+      let(:opts) { { username: 'NineOneOne' } }
 
       let(:expected_body) { { text: 'message', username: 'NineOneOne' }.to_json }
 
       it 'sends proper JSON' do
-        subject.notify('message')
+        expect(subject.notify('message')).to eq true
       end
     end
 
     context 'with all optional fields' do
-      let(:opts) { { http: http, username: 'NineOneOne', channel: '#my-chan' } }
+      use_vcr_cassette 'slack_notification_all_fields'
 
-      let(:expected_body) { { text: 'message', channel: '#my-chan', username: 'NineOneOne' }.to_json }
+      let(:opts) { { username: 'NineOneOne', channel: '#ruby-rails' } }
+
+      let(:expected_body) { { text: 'message', channel: '#ruby-rails', username: 'NineOneOne' }.to_json }
 
       it 'sends proper JSON' do
-        subject.notify('message')
+        expect(subject.notify('message')).to eq true
       end
     end
   end

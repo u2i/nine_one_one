@@ -1,0 +1,56 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://hooks.slack.com/services/XXX
+    body:
+      encoding: UTF-8
+      string: '{"text":"message","channel":"#ruby-rails","username":"NineOneOne"}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '22'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Content-Security-Policy:
+      - referrer no-referrer;
+      Date:
+      - Fri, 10 Feb 2017 10:36:51 GMT
+      Server:
+      - Apache
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Slack-Backend:
+      - h
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 981e6efe0b93321cd48a8dba00467128.cloudfront.net (CloudFront)
+      X-Amz-Cf-Id:
+      - jQqY4806Wx5HdvffGl37MtslamtzSkD95Za66ThOo47IYgQiysWwiQ==
+    body:
+      encoding: ASCII-8BIT
+      string: ok
+    http_version: 
+  recorded_at: Fri, 10 Feb 2017 10:36:51 GMT
+recorded_with: VCR 3.0.3
