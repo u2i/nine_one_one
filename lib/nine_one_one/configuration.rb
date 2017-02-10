@@ -9,8 +9,6 @@ module NineOneOne
     def initialize
       self.send_pagers = false
       self.slack_enabled = false
-      self.slack_channel = nil
-      self.slack_username = nil
       self.logger = Logger.new(STDOUT)
     end
 

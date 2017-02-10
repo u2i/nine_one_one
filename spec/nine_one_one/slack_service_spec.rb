@@ -30,7 +30,7 @@ describe NineOneOne::SlackService do
 
     before { expect(http).to receive(:post).with('/services/XXX', expected_body, Hash) }
 
-    describe 'with one optional field' do
+    context 'with one optional field' do
       let(:opts) { { http: http, username: 'NineOneOne' } }
 
       let(:expected_body) { { text: 'message', username: 'NineOneOne' }.to_json }
@@ -40,7 +40,7 @@ describe NineOneOne::SlackService do
       end
     end
 
-    describe 'with all optional fields' do
+    context 'with all optional fields' do
       let(:opts) { { http: http, username: 'NineOneOne', channel: '#my-chan' } }
 
       let(:expected_body) { { text: 'message', channel: '#my-chan', username: 'NineOneOne' }.to_json }
