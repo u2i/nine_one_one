@@ -2,11 +2,15 @@ require 'logger'
 
 module NineOneOne
   class Configuration
-    attr_accessor :send_pagers, :pager_duty_integration_key, :slack_enabled, :slack_webhook_url, :logger
+    attr_accessor :send_pagers, :pager_duty_integration_key,
+                  :slack_channel, :slack_enabled, :slack_username, :slack_webhook_url,
+                  :logger
 
     def initialize
       self.send_pagers = false
       self.slack_enabled = false
+      self.slack_channel = nil
+      self.slack_username = nil
       self.logger = Logger.new(STDOUT)
     end
 
@@ -15,6 +19,7 @@ module NineOneOne
       validate_logger
       validate_pager_duty_key
       validate_slack_enabled
+      validate_slack_opts
     end
 
     private
@@ -48,6 +53,16 @@ module NineOneOne
 
       if slack_enabled && (slack_webhook_url.nil? || slack_webhook_url.empty?)
         raise ConfigurationError, 'Incorrect Slack webhook URL'
+      end
+    end
+
+    def validate_slack_opts
+      unless slack_username.nil? || slack_username.is_a?(String)
+        raise ConfigurationError, "Illegal 'slack_username' value: #{slack_username}"
+      end
+
+      unless slack_channel.nil? || slack_channel.is_a?(String)
+        raise ConfigurationError, "Illegal 'slack_channel' value: #{slack_channel}"
       end
     end
     # rubocop:enable Style/GuardClause

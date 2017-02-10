@@ -17,7 +17,8 @@ module NineOneOne
 
   def self.notification_service
     if config.slack_enabled
-      SlackService.new(config.slack_webhook_url)
+      SlackService.new(config.slack_webhook_url, username: config.slack_username,
+                                                 channel: config.slack_channel)
     else
       LogService.new(config.logger)
     end

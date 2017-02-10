@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe NineOneOne::SlackService do
-  describe '#notify' do
-    let(:webhook_url) { 'https://hooks.slack.com/services/XXX' }
+  let(:webhook_url) { 'https://hooks.slack.com/services/XXX' }
 
+  describe 'vcr test' do
     subject { described_class.new(webhook_url) }
 
     describe 'when API call succeeds' do
@@ -19,6 +19,38 @@ describe NineOneOne::SlackService do
 
       it 'returns false' do
         expect(subject.notify('message')).to eq false
+      end
+    end
+  end
+
+  describe 'using optional fields' do
+    let(:http) { instance_double(NineOneOne::Http) }
+
+    subject { described_class.new(webhook_url, opts) }
+
+    before do
+      expect(http).to receive(:post).with('/services/XXX', expected_body, Hash)
+    end
+
+    describe 'with one optional field' do
+      let(:opts) { { http: http, username: 'NineOneOne' } }
+
+      let(:expected_body) { { text: 'message', username: 'NineOneOne' }.to_json }
+
+      it 'sends proper JSON' do
+        subject.notify('message')
+      end
+    end
+
+    describe 'with all optional fields' do
+      let(:opts) { { http: http, username: 'NineOneOne', channel: '#my-chan' } }
+
+      let(:expected_body) do
+        { text: 'message', channel: '#my-chan', username: 'NineOneOne' }.to_json
+      end
+
+      it 'sends proper JSON' do
+        subject.notify('message')
       end
     end
   end
