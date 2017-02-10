@@ -28,9 +28,7 @@ describe NineOneOne::SlackService do
 
     subject { described_class.new(webhook_url, opts) }
 
-    before do
-      expect(http).to receive(:post).with('/services/XXX', expected_body, Hash)
-    end
+    before { expect(http).to receive(:post).with('/services/XXX', expected_body, Hash) }
 
     describe 'with one optional field' do
       let(:opts) { { http: http, username: 'NineOneOne' } }
@@ -45,9 +43,7 @@ describe NineOneOne::SlackService do
     describe 'with all optional fields' do
       let(:opts) { { http: http, username: 'NineOneOne', channel: '#my-chan' } }
 
-      let(:expected_body) do
-        { text: 'message', channel: '#my-chan', username: 'NineOneOne' }.to_json
-      end
+      let(:expected_body) { { text: 'message', channel: '#my-chan', username: 'NineOneOne' }.to_json }
 
       it 'sends proper JSON' do
         subject.notify('message')
