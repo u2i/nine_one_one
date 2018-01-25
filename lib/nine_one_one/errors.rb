@@ -1,6 +1,7 @@
 module NineOneOne
   class Error < RuntimeError; end
 
+  class NotConfiguredError < Error; end
   class ConfigurationError < Error; end
   class IncidentReportingError < Error; end
   class NotificationError < Error; end
