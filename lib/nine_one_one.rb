@@ -34,4 +34,12 @@ module NineOneOne
   def self.notify(message)
     use(:default).notify(message)
   end
+
+  def self.notification_service
+    use(:default).notification_service
+  end
+
+  def self.emergency_service
+    use(:default).emergency_service
+  end
 end

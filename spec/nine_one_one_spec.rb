@@ -183,4 +183,24 @@ describe NineOneOne do
       NineOneOne.notify(message)
     end
   end
+
+  describe '.notification_service' do
+    it 'returns default notification service' do
+      notifier = instance_double(NineOneOne::Notifier)
+      allow(NineOneOne).to receive(:use).with(:default).and_return(notifier)
+      expect(notifier).to receive(:notification_service)
+
+      NineOneOne.notification_service
+    end
+  end
+
+  describe '.emergency_service' do
+    it 'returns default emergency service' do
+      notifier = instance_double(NineOneOne::Notifier)
+      allow(NineOneOne).to receive(:use).with(:default).and_return(notifier)
+      expect(notifier).to receive(:emergency_service)
+
+      NineOneOne.emergency_service
+    end
+  end
 end
