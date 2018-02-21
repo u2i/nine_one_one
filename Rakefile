@@ -5,7 +5,7 @@ require 'rubocop/rake_task'
 RSpec::Core::RakeTask.new(:spec)
 
 RuboCop::RakeTask.new do |task|
-  task.options = %w(--display-cop-names --format simple)
+  task.options = %w[--display-cop-names --format simple]
 end
 
-task default: [:spec, :rubocop]
+task default: %i[spec rubocop]

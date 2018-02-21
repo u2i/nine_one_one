@@ -23,9 +23,7 @@ module NineOneOne
     private
 
     def validate_send_pagers
-      unless [true, false].include?(send_pagers)
-        raise ConfigurationError, "Illegal 'send_pagers' value: #{send_pagers}"
-      end
+      raise ConfigurationError, "Illegal 'send_pagers' value: #{send_pagers}" unless [true, false].include?(send_pagers)
 
       raise ConfigurationError, "'send_pagers' is false but no logger given" if !send_pagers && logger.nil?
     end
