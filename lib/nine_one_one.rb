@@ -2,47 +2,44 @@ require_relative './nine_one_one/errors'
 require_relative './nine_one_one/http'
 require_relative './nine_one_one/version'
 require_relative './nine_one_one/configuration'
+require_relative './nine_one_one/notifier'
 require_relative './nine_one_one/log_service'
 require_relative './nine_one_one/slack_service'
 require_relative './nine_one_one/pager_duty_service'
 
 module NineOneOne
-  def self.emergency_service
-    if config.send_pagers
-      PagerDutyService.new(config.pager_duty_integration_key)
-    else
-      LogService.new(config.logger)
-    end
-  end
-
-  def self.notification_service
-    if config.slack_enabled
-      SlackService.new(config.slack_webhook_url, username: config.slack_username,
-                                                 channel: config.slack_channel)
-    else
-      LogService.new(config.logger)
-    end
-  end
-
-  def self.configure
+  def self.configure(type = :default)
     config = Configuration.new
 
     yield config
 
     config.validate
 
-    @config = config
+    configs[type] = config
   end
 
-  def self.config
-    @config ||= Configuration.new
+  def self.use(type = :default)
+    config = configs.fetch(type) { raise NotConfiguredError, "Configuration type=#{type} is not configured." }
+    Notifier.new(config)
+  end
+
+  def self.configs
+    @configs ||= {}
   end
 
   def self.emergency(incident_key, description, details_hash = nil)
-    emergency_service.trigger_event(incident_key, description, details_hash)
+    use(:default).emergency(incident_key, description, details_hash)
   end
 
   def self.notify(message)
-    notification_service.notify(message)
+    use(:default).notify(message)
+  end
+
+  def self.notification_service
+    use(:default).notification_service
+  end
+
+  def self.emergency_service
+    use(:default).emergency_service
   end
 end

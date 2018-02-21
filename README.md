@@ -28,7 +28,7 @@ Or install it yourself as:
 
 ## Configuration
 
-By default NineOneOne loggs notifications and emegencies to STDOUT. You can override default settings with:
+By default NineOneOne logs notifications and emergencies to STDOUT. You can override default settings with:
 
 ```ruby
 NineOneOne.configure do |config|
@@ -50,6 +50,18 @@ NineOneOne.configure do |config|
     # Defaults to Logger.new(STDOUT)
     config.logger = Logger.new('incidents.log') 
 end
+
+# optional custom configurations
+
+NineOneOne.configure(:my_custom_configuration) do |config|
+    config.send_pagers = false
+
+    config.slack_enabled = true
+    config.slack_webhook_url = 'https://hooks.slack.com/services/XXX/YYY/ZZZ'
+
+    config.slack_username = 'NineOneOne'
+    config.slack_channel = '#my-notifications'
+end
 ```
 
 ## Usage
@@ -60,6 +72,10 @@ NineOneOne.notify('Something happened!')
 
 # Send pager or log emergency using logger depending on the `send_pagers` config parameter
 NineOneOne.emergency('INCIDENT_KEY', 'Emergency message!', { optional_hash: 'with details' })
+
+# same for custom configurations
+NineOneOne.use(:my_custom_configuration).notify('Something happened!')
+NineOneOne.use(:my_custom_configuration).emergency('INCIDENT_KEY', 'Emergency message!', { optional_hash: 'with details' })
 ```
 
 ## Development

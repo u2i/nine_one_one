@@ -5,79 +5,6 @@ describe NineOneOne do
     expect(NineOneOne::VERSION).not_to be nil
   end
 
-  before { NineOneOne.instance_variable_set(:@config, nil) }
-
-  describe 'default config' do
-    it 'is valid' do
-      config = NineOneOne.config
-
-      expect { config.validate }.not_to raise_error
-    end
-  end
-
-  describe '.emergency_service' do
-    context 'when send_pagers is true' do
-      let(:send_pagers) { true }
-      let(:pager_key) { 'pager-key-123' }
-
-      it 'returns PagerDutyService' do
-        NineOneOne.configure do |config|
-          config.send_pagers = send_pagers
-          config.pager_duty_integration_key = pager_key
-        end
-
-        expect(NineOneOne.emergency_service).to be_a NineOneOne::PagerDutyService
-      end
-    end
-
-    context 'when send_pagers is false' do
-      let(:send_pagers) { false }
-      let(:pager_key) { nil }
-      let(:logger) { double('Logger', info: 'info', error: 'error') }
-
-      it 'returns LogService' do
-        NineOneOne.configure do |config|
-          config.send_pagers = send_pagers
-          config.pager_duty_integration_key = pager_key
-          config.logger = logger
-        end
-
-        expect(NineOneOne.emergency_service).to be_a NineOneOne::LogService
-      end
-    end
-  end
-
-  describe '.notification_service' do
-    let(:logger) { double('Logger', error: 'error!', info: 'info!') }
-    let(:slack_webhook_url) { 'url' }
-
-    subject { described_class.notification_service }
-
-    before do
-      NineOneOne.configure do |config|
-        config.slack_enabled = slack_enabled
-        config.slack_webhook_url = slack_webhook_url
-        config.logger = logger
-      end
-    end
-
-    context 'when slack is not enabled' do
-      let(:slack_enabled) { false }
-
-      it 'returns logging service' do
-        expect(subject).to be_a(NineOneOne::LogService)
-      end
-    end
-
-    context 'when slack is enabled' do
-      let(:slack_enabled) { true }
-
-      it 'returns slack service' do
-        expect(subject).to be_a(NineOneOne::SlackService)
-      end
-    end
-  end
-
   describe 'configuration' do
     it 'accepts "send_pagers" param' do
       NineOneOne.configure do |config|
@@ -85,7 +12,7 @@ describe NineOneOne do
         config.pager_duty_integration_key = 'key-123'
       end
 
-      expect(NineOneOne.config.send_pagers).to eq true
+      expect(NineOneOne.configs[:default].send_pagers).to eq true
     end
 
     it 'raises error when send_pagers is nil' do
@@ -139,7 +66,7 @@ describe NineOneOne do
           config.pager_duty_integration_key = 'pager-key-123'
         end
 
-        expect(NineOneOne.config.pager_duty_integration_key).to eq 'pager-key-123'
+        expect(NineOneOne.configs[:default].pager_duty_integration_key).to eq 'pager-key-123'
       end
 
       it 'raises error if "pager_duty_integration_key" is null but send_pagers is true' do
@@ -171,33 +98,111 @@ describe NineOneOne do
         end.to raise_error(NineOneOne::ConfigurationError)
       end
     end
+
+    context 'with multi config' do
+      before do
+        NineOneOne.configure(:urgent) do |config|
+          config.slack_enabled = false
+        end
+
+        NineOneOne.configure(:non_urgent) do |config|
+          config.slack_webhook_url = 'webhook'
+          config.slack_channel = 'channel'
+          config.slack_enabled = true
+        end
+      end
+
+      it 'has separate settings for each configuration' do
+        expect(NineOneOne.configs[:default].slack_enabled).to eq(false)
+        expect(NineOneOne.configs[:urgent].slack_enabled).to eq(false)
+        expect(NineOneOne.configs[:non_urgent].slack_enabled).to eq(true)
+      end
+
+      it 'raises error when non-existent configuration is requested' do
+        expect { NineOneOne.use(:foo) }.to raise_error(NineOneOne::NotConfiguredError)
+      end
+    end
+  end
+
+  describe '.use' do
+    context 'with default config' do
+      it 'returns preconfigured notifier' do
+        NineOneOne.configure do |config|
+          config.send_pagers = true
+          config.pager_duty_integration_key = 'integration key'
+          config.slack_enabled = true
+          config.slack_channel = 'channel'
+          config.slack_webhook_url = 'http://example.com'
+        end
+
+        notifier = NineOneOne.use(:default)
+
+        expect(notifier.notification_service).to be_an_instance_of(NineOneOne::SlackService)
+        expect(notifier.emergency_service).to be_an_instance_of(NineOneOne::PagerDutyService)
+      end
+    end
+
+    context 'custom config' do
+      it 'returns preconfigured notifier' do
+        NineOneOne.configure(:my_custom_config) do |config|
+          config.send_pagers = true
+          config.pager_duty_integration_key = 'integration key'
+          config.slack_enabled = true
+          config.slack_channel = 'channel'
+          config.slack_webhook_url = 'http://example.com'
+        end
+
+        notifier = NineOneOne.use(:my_custom_config)
+
+        expect(notifier.notification_service).to be_an_instance_of(NineOneOne::SlackService)
+        expect(notifier.emergency_service).to be_an_instance_of(NineOneOne::PagerDutyService)
+      end
+    end
   end
 
   describe '.emergency' do
-    let(:emergency_service) { instance_double(NineOneOne::PagerDutyService) }
+    let(:notifier) { spy(NineOneOne::Notifier) }
     let(:incident_key) { 'ERROR_KEY' }
     let(:message) { 'danger' }
     let(:details_hash) { { why: 'I dont know' } }
 
-    it 'delegates sending to emergency service' do
-      allow(NineOneOne).to receive(:emergency_service).and_return(emergency_service)
-
-      expect(emergency_service).to receive(:trigger_event).with(incident_key, message, details_hash)
-
+    it 'delegates sending to notifier' do
+      allow(NineOneOne).to receive(:use).and_return(notifier)
       NineOneOne.emergency(incident_key, message, details_hash)
+      expect(notifier).to have_received(:emergency).with(incident_key, message, details_hash)
     end
   end
 
   describe '.notify' do
-    let(:notification_service) { instance_double(NineOneOne::SlackService) }
+    let(:notifier) { spy(NineOneOne::Notifier) }
     let(:message) { 'alert' }
 
-    it 'delegates notification to notification service' do
-      allow(NineOneOne).to receive(:notification_service).and_return(notification_service)
-
-      expect(notification_service).to receive(:notify).with(message)
-
+    it 'delegates notification to notifier' do
+      allow(NineOneOne).to receive(:use).with(:default).and_return(notifier)
       NineOneOne.notify(message)
+      expect(notifier).to have_received(:notify).with(message)
+    end
+  end
+
+  describe '.notification_service' do
+    let(:notifier) { spy(NineOneOne::Notifier) }
+
+    it 'returns default notification service' do
+      allow(NineOneOne).to receive(:use).with(:default).and_return(notifier)
+      NineOneOne.notification_service
+
+      expect(notifier).to have_received(:notification_service)
+    end
+  end
+
+  describe '.emergency_service' do
+    let(:notifier) { spy(NineOneOne::Notifier) }
+
+    it 'returns default emergency service' do
+      allow(NineOneOne).to receive(:use).with(:default).and_return(notifier)
+      NineOneOne.emergency_service
+
+      expect(notifier).to have_received(:emergency_service)
     end
   end
 end
