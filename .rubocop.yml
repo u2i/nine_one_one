@@ -16,9 +16,6 @@ Style/Documentation:
 Style/FormatString:
   Enabled: false
 
-Style/WhileUntilModifier:
-  MaxLineLength: 120
-
 Metrics/LineLength:
   Max: 120
   Enabled: true
