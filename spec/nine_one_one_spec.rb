@@ -99,8 +99,8 @@ describe NineOneOne do
       end
     end
 
-    context 'multi config' do
-      it 'allows to have separate configs for different purposes' do
+    context 'with multi config' do
+      before do
         NineOneOne.configure(:urgent) do |config|
           config.slack_enabled = false
         end
@@ -110,9 +110,11 @@ describe NineOneOne do
           config.slack_channel = 'channel'
           config.slack_enabled = true
         end
+      end
 
+      it 'has separate settings for each configuration' do
         expect(NineOneOne.configs[:default].slack_enabled).to eq(false)
-        expect(NineOneOne.configs[:default].slack_enabled).to eq(false)
+        expect(NineOneOne.configs[:urgent].slack_enabled).to eq(false)
         expect(NineOneOne.configs[:non_urgent].slack_enabled).to eq(true)
       end
 
@@ -123,7 +125,7 @@ describe NineOneOne do
   end
 
   describe '.use' do
-    context 'default config' do
+    context 'with default config' do
       it 'returns preconfigured notifier' do
         NineOneOne.configure do |config|
           config.send_pagers = true
@@ -159,48 +161,48 @@ describe NineOneOne do
   end
 
   describe '.emergency' do
-    let(:notifier) { instance_double(NineOneOne::Notifier) }
+    let(:notifier) { spy(NineOneOne::Notifier) }
     let(:incident_key) { 'ERROR_KEY' }
     let(:message) { 'danger' }
     let(:details_hash) { { why: 'I dont know' } }
 
     it 'delegates sending to notifier' do
       allow(NineOneOne).to receive(:use).and_return(notifier)
-      expect(notifier).to receive(:emergency).with(incident_key, message, details_hash)
-
       NineOneOne.emergency(incident_key, message, details_hash)
+      expect(notifier).to have_received(:emergency).with(incident_key, message, details_hash)
     end
   end
 
   describe '.notify' do
-    let(:notifier) { instance_double(NineOneOne::Notifier) }
+    let(:notifier) { spy(NineOneOne::Notifier) }
     let(:message) { 'alert' }
 
     it 'delegates notification to notifier' do
       allow(NineOneOne).to receive(:use).with(:default).and_return(notifier)
-      expect(notifier).to receive(:notify).with(message)
-
       NineOneOne.notify(message)
+      expect(notifier).to have_received(:notify).with(message)
     end
   end
 
   describe '.notification_service' do
-    it 'returns default notification service' do
-      notifier = instance_double(NineOneOne::Notifier)
-      allow(NineOneOne).to receive(:use).with(:default).and_return(notifier)
-      expect(notifier).to receive(:notification_service)
+    let(:notifier) { spy(NineOneOne::Notifier) }
 
+    it 'returns default notification service' do
+      allow(NineOneOne).to receive(:use).with(:default).and_return(notifier)
       NineOneOne.notification_service
+
+      expect(notifier).to have_received(:notification_service)
     end
   end
 
   describe '.emergency_service' do
-    it 'returns default emergency service' do
-      notifier = instance_double(NineOneOne::Notifier)
-      allow(NineOneOne).to receive(:use).with(:default).and_return(notifier)
-      expect(notifier).to receive(:emergency_service)
+    let(:notifier) { spy(NineOneOne::Notifier) }
 
+    it 'returns default emergency service' do
+      allow(NineOneOne).to receive(:use).with(:default).and_return(notifier)
       NineOneOne.emergency_service
+
+      expect(notifier).to have_received(:emergency_service)
     end
   end
 end
