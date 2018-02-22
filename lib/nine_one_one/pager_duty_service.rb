@@ -1,21 +1,22 @@
 module NineOneOne
   class PagerDutyService
     BASE_HOST = 'events.pagerduty.com'.freeze
-    EVENT_ENDPOINT = '/generic/2010-04-15/create_event.json'.freeze
-
+    EVENTS_API_V2_ENDPOINT = '/v2/enqueue'.freeze
     THROTTLE_HTTP_STATUS = 403
     THROTTLE_RETRIES = 2
+    HIGH_URGENCY_ERROR = 'error'.freeze
 
     def initialize(api_integration_key)
       @api_integration_key = api_integration_key
       @http = Http.new(BASE_HOST)
     end
 
-    def trigger_event(incident_key, description, details_hash = nil)
+    def trigger_event(description, source, details_hash = {}, severity = HIGH_URGENCY_ERROR)
       response = nil
 
       retry_on(THROTTLE_HTTP_STATUS, THROTTLE_RETRIES) do
-        response = make_request(description, details_hash, incident_key)
+        body = request_body(description, severity, source, details_hash)
+        response = make_request(body)
         response.code.to_i
       end
 
@@ -35,25 +36,27 @@ module NineOneOne
 
       while yield == value && retry_number <= retries_number
         retry_number += 1
-        sleep 2**retry_number
+        sleep 2 ** retry_number
       end
     end
 
-    def make_request(description, details_hash, incident_key)
-      headers = { 'Content-Type' => 'application/json' }
-      body = request_body(incident_key, description, details_hash)
+    def make_request(body)
+      headers = {'Content-Type' => 'application/json'}
 
-      http.post(EVENT_ENDPOINT, body, headers)
+      http.post(EVENTS_API_V2_ENDPOINT, body, headers)
     end
 
-    def request_body(incident_key, description, details_hash)
+    def request_body(description, severity, source, details_hash)
       body = {
-        service_key: api_integration_key,
-        event_type: 'trigger',
-        incident_key: incident_key,
-        description: description
+        routing_key: api_integration_key,
+        event_action: 'trigger',
+        payload: {
+          summary: description,
+          severity: severity,
+          source: source,
+          custom_details: details_hash
+        }
       }
-      body[:details] = details_hash if details_hash
 
       body.to_json
     end
