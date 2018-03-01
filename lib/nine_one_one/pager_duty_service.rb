@@ -5,13 +5,14 @@ module NineOneOne
     THROTTLE_HTTP_STATUS = 403
     THROTTLE_RETRIES = 2
     HIGH_URGENCY_ERROR = 'error'.freeze
+    LOW_URGENCY_ERROR = 'warning'.freeze
 
     def initialize(api_integration_key)
       @api_integration_key = api_integration_key
       @http = Http.new(BASE_HOST)
     end
 
-    def trigger_event(description, source, details_hash = {}, severity = HIGH_URGENCY_ERROR)
+    def trigger_event(description, source, details_hash, severity = HIGH_URGENCY_ERROR)
       response = nil
 
       retry_on(THROTTLE_HTTP_STATUS, THROTTLE_RETRIES) do
@@ -25,6 +26,12 @@ module NineOneOne
         raise IncidentReportingError, "Failed to create PagerDuty event: #{response.body}"
       end
       # rubocop:enable Style/GuardClause
+    end
+
+    alias_method :trigger_high_urgency_event, :trigger_event
+
+    def trigger_low_urgency_event(description, source, details_hash = {})
+      trigger_event(description, source, details_hash, NineOneOne::PagerDutyService::LOW_URGENCY_ERROR)
     end
 
     private

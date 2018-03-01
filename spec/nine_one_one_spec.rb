@@ -162,14 +162,14 @@ describe NineOneOne do
 
   describe '.emergency' do
     let(:notifier) { spy(NineOneOne::Notifier) }
-    let(:incident_key) { 'ERROR_KEY' }
+    let(:source) { 'error source info' }
     let(:message) { 'danger' }
     let(:details_hash) { { why: 'I dont know' } }
 
     it 'delegates sending to notifier' do
       allow(NineOneOne).to receive(:use).and_return(notifier)
-      NineOneOne.emergency(incident_key, message, details_hash)
-      expect(notifier).to have_received(:emergency).with(incident_key, message, details_hash)
+      NineOneOne.emergency(message, source, details_hash)
+      expect(notifier).to have_received(:emergency).with(message, source, details_hash)
     end
   end
 
