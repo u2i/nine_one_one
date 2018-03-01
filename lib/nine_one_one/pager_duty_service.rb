@@ -21,7 +21,7 @@ module NineOneOne
 
       # rubocop:disable Style/GuardClause
       unless response.is_a?(Net::HTTPSuccess)
-        raise IncidentReportingError, "Failed to create PagerDuty event: #{response.body}"
+        raise IncidentReportingError, "Failed to create PagerDuty event: #{response.body}, code: #{response.code}"
       end
       # rubocop:enable Style/GuardClause
     end
@@ -35,7 +35,7 @@ module NineOneOne
 
       while yield == value && retry_number <= retries_number
         retry_number += 1
-        sleep 2**retry_number
+        sleep 60
       end
     end
 
