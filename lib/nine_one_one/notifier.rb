@@ -4,8 +4,8 @@ module NineOneOne
       @config = config
     end
 
-    def emergency(description, source, details_hash)
-      emergency_service.trigger_event(description, source, details_hash)
+    def emergency(description, source, details_hash, severity)
+      emergency_service.trigger_event(description, source, details_hash, severity)
     end
 
     def notify(message)

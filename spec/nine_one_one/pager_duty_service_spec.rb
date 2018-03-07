@@ -25,15 +25,5 @@ describe NineOneOne::PagerDutyService do
           .to raise_error(NineOneOne::IncidentReportingError)
       end
     end
-
-    describe '#trigger_low_urgency_event' do
-      let(:low_urgency_severity) { NineOneOne::PagerDutyService::LOW_URGENCY_ERROR }
-      use_vcr_cassette 'pager_duty_trigger_low_urgency_event_success', match_requests_on: [:body]
-
-      it 'calls pager with low urgency severity' do
-        expect(pager_service).to receive(:trigger_event).with(message, source, details_hash, low_urgency_severity)
-        pager_service.trigger_low_urgency_event(message, source, details_hash)
-      end
-    end
   end
 end

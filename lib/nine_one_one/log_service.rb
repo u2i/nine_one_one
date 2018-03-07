@@ -4,8 +4,8 @@ module NineOneOne
       @logger = logger
     end
 
-    def trigger_event(incident_key, description, details_hash = nil)
-      logger.error "TRIGGERED INCIDENT #{incident_key}: #{description} #{details_hash}"
+    def trigger_event(description, source, details_hash, severity)
+      logger.error "TRIGGERED INCIDENT (#{severity}): #{description} | #{details_hash} | #{source}"
     end
 
     def notify(message)
