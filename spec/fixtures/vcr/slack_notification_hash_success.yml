@@ -5,7 +5,7 @@ http_interactions:
     uri: https://hooks.slack.com/services/XXX
     body:
       encoding: UTF-8
-      string: '{"text":"message"}'
+      string: '{"attachments":[{"pretext":"us staging","title":"some title","text":"msg 1\\nmsg 2"}]}'
     headers:
       Content-Type:
       - application/json

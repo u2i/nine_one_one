@@ -11,12 +11,8 @@ module NineOneOne
 
     def notify(message)
       body = request_body(message)
-
       headers = { 'Content-Type' => 'application/json' }
-
-      response = http.post(path, body, headers)
-
-      response.is_a?(Net::HTTPSuccess)
+      http.post(path, body, headers)
     end
 
     private
@@ -24,8 +20,7 @@ module NineOneOne
     attr_reader :channel, :http, :path, :username
 
     def request_body(message)
-      body = { text: message }
-
+      body = message.is_a?(Hash) ? message : { text: message }
       body[:channel]  = channel  unless channel.nil?
       body[:username] = username unless username.nil?
 
