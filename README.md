@@ -73,6 +73,8 @@ end
 ```ruby
 # Send message to Slack channel or log it using logger depending on the `slack_enabled` config parameter
 NineOneOne.notify('Something happened!')
+# You can also send a hash message (compatible with the slack message spec: https://api.slack.com/docs/messages/builder) 
+NineOneOne.notify({attachments: [{title: 'Something happened!', text: 'More info'}]})
 
 # Send pager or log emergency using logger depending on the `send_pagers` config parameter
 NineOneOne.emergency('Emergency message!', 'Error source info', { optional_hash: 'with details' })
@@ -88,7 +90,7 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 
 # Changelog
 
-1.0.0 Migrate to Pager Duty Events API V2, which makes this version backwards incompatible.
+1.0.0 Migrate to Pager Duty Events API V2 (backwards incompatible!) and add support for slack hash message.
 
 0.3.0 Allow to have multiple configurations for notifications 
 
