@@ -8,7 +8,8 @@ describe NineOneOne::LogService do
   describe '#trigger_event' do
     it 'calls logger#error' do
       expect(logger).to receive(:error).with(String)
-      subject.trigger_event('key', 'desc', a: 'b', c: 'd')
+
+      subject.trigger_event('issue description', 'source info', 'details hash', 'severity')
     end
   end
 

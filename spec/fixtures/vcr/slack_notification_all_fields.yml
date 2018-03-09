@@ -5,7 +5,7 @@ http_interactions:
     uri: https://hooks.slack.com/services/XXX
     body:
       encoding: UTF-8
-      string: '{"text":"message","channel":"#ruby-rails","username":"NineOneOne"}'
+      string: '{"text":"any string message","channel":"#ruby-rails","username":"NineOneOne"}'
     headers:
       Content-Type:
       - application/json

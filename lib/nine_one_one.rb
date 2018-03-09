@@ -27,8 +27,8 @@ module NineOneOne
     @configs ||= {}
   end
 
-  def self.emergency(incident_key, description, details_hash = nil)
-    use(:default).emergency(incident_key, description, details_hash)
+  def self.emergency(description, source, details_hash = nil, severity = PagerDutyService::HIGH_URGENCY_ERROR)
+    use(:default).emergency(description, source, details_hash, severity)
   end
 
   def self.notify(message)
