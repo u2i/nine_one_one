@@ -11,11 +11,12 @@ module NineOneOne
       @http = Http.new(BASE_HOST)
     end
 
-    def trigger_event(description, source, details_hash, severity)
+    def trigger_event(description, source, details_hash: nil, severity: PagerDutyService::HIGH_URGENCY_ERROR,
+                      dedup_key: nil)
       response = nil
 
       retry_on(THROTTLE_HTTP_STATUS, THROTTLE_RETRIES) do
-        body = request_body(description, severity, source, details_hash)
+        body = request_body(description, severity, source, details_hash, dedup_key)
         response = make_request(body)
         response.code.to_i
       end
@@ -46,10 +47,11 @@ module NineOneOne
       http.post(EVENTS_API_V2_ENDPOINT, body, headers)
     end
 
-    def request_body(description, severity, source, details_hash)
+    def request_body(description, severity, source, details_hash, dedup_key)
       body = {
         routing_key: api_integration_key,
         event_action: 'trigger',
+        dedup_key: dedup_key,
         payload: {
           summary: description,
           severity: severity,
