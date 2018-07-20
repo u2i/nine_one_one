@@ -166,11 +166,14 @@ describe NineOneOne do
     let(:message) { 'danger' }
     let(:details_hash) { { why: 'I dont know' } }
     let(:severity) { NineOneOne::PagerDutyService::HIGH_URGENCY_ERROR }
+    let(:dedup_key) { 'dedup_key' }
 
     it 'delegates sending to notifier' do
       allow(NineOneOne).to receive(:use).and_return(notifier)
-      NineOneOne.emergency(message, source, details_hash)
-      expect(notifier).to have_received(:emergency).with(message, source, details_hash, severity)
+      NineOneOne.emergency(message, source, details_hash: details_hash, severity: severity,
+                                            dedup_key: dedup_key)
+      expect(notifier).to have_received(:emergency).with(message, source, details_hash: details_hash,
+                                                                          severity: severity, dedup_key: dedup_key)
     end
   end
 
