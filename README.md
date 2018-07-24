@@ -79,7 +79,7 @@ NineOneOne.notify({attachments: [{title: 'Something happened!', text: 'More info
 # Send pager or log emergency using logger depending on the `send_pagers` config parameter
 NineOneOne.emergency('Emergency message!', 'Error source info', details_hash: { optional_hash: 'with details' })
 
-# Send pager that if resend will be grouped into one incident
+# Send multiple pagers that will be grouped into one incident
 NineOneOne.emergency('Emergency message!', 'Error source info', dedup_key: 'Kinda unique key') 
 
 # same for custom configurations
