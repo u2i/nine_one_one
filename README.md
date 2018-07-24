@@ -90,6 +90,8 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 
 # Changelog
 
+2.0.0 Change the interface to have default parameters. Introduce dedup_key. It's backwards incompatible again.
+
 1.0.0 Migrate to Pager Duty Events API V2 (backwards incompatible!) and add support for slack hash message.
 
 0.3.0 Allow to have multiple configurations for notifications 
