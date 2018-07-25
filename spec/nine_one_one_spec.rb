@@ -170,10 +170,10 @@ describe NineOneOne do
 
     it 'delegates sending to notifier' do
       allow(NineOneOne).to receive(:use).and_return(notifier)
-      NineOneOne.emergency(message, source, details_hash: details_hash, severity: severity,
-                                            dedup_key: dedup_key)
-      expect(notifier).to have_received(:emergency).with(message, source, details_hash: details_hash,
-                                                                          severity: severity, dedup_key: dedup_key)
+      NineOneOne.emergency(message, source: source, details_hash: details_hash, severity: severity,
+                                    dedup_key: dedup_key)
+      expect(notifier).to have_received(:emergency).with(message, source: source, details_hash: details_hash,
+                                                                  severity: severity, dedup_key: dedup_key)
     end
   end
 

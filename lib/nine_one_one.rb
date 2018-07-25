@@ -27,10 +27,11 @@ module NineOneOne
     @configs ||= {}
   end
 
-  def self.emergency(description, source, details_hash: nil, severity: PagerDutyService::HIGH_URGENCY_ERROR,
-                     dedup_key: nil)
-    use(:default).emergency(description, source, details_hash: details_hash, severity: severity,
-                                 dedup_key: dedup_key)
+  def self.emergency(description, source: Socket.gethostname, dedup_key: nil,
+                     severity: PagerDutyService::HIGH_URGENCY_ERROR, details_hash: nil)
+    use(:default).emergency(description, source: source, dedup_key: dedup_key, severity: severity,
+                                 details_hash: details_hash)
+
   end
 
   def self.notify(message)

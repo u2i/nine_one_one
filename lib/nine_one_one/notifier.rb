@@ -4,9 +4,9 @@ module NineOneOne
       @config = config
     end
 
-    def emergency(description, source, dedup_key: nil, severity: PagerDutyService::HIGH_URGENCY_ERROR,
-                  details_hash: nil)
-      emergency_service.trigger_event(description, source, dedup_key: dedup_key, severity: severity,
+    def emergency(description, source: Socket.gethostname, dedup_key: nil,
+                  severity: PagerDutyService::HIGH_URGENCY_ERROR, details_hash: nil)
+      emergency_service.trigger_event(description, source: source, dedup_key: dedup_key, severity: severity,
                                       details_hash: details_hash)
     end
 

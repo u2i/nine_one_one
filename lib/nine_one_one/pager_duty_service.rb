@@ -12,7 +12,8 @@ module NineOneOne
       @http = Http.new(BASE_HOST)
     end
 
-    def trigger_event(description, source, dedup_key: nil, severity: HIGH_URGENCY_ERROR, details_hash: nil)
+    def trigger_event(description, source: Socket.gethostname, dedup_key: nil, severity: HIGH_URGENCY_ERROR,
+                      details_hash: nil)
       response = nil
 
       retry_on(THROTTLE_HTTP_STATUS, THROTTLE_RETRIES) do
