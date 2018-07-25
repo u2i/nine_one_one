@@ -37,12 +37,12 @@ module NineOneOne
 
       while yield == value && retry_number <= retries_number
         retry_number += 1
-        sleep 2 ** retry_number
+        sleep 2**retry_number
       end
     end
 
     def make_request(body)
-      headers = { 'Content-Type' => 'application/json' }
+      headers = {'Content-Type' => 'application/json'}
 
       http.post(EVENTS_API_V2_ENDPOINT, body, headers)
     end
