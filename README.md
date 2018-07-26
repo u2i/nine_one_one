@@ -77,11 +77,14 @@ NineOneOne.notify('Something happened!')
 NineOneOne.notify({attachments: [{title: 'Something happened!', text: 'More info'}]})
 
 # Send pager or log emergency using logger depending on the `send_pagers` config parameter
-NineOneOne.emergency('Emergency message!', 'Error source info', { optional_hash: 'with details' })
+NineOneOne.emergency('Emergency message!', details_hash: { optional_hash: 'with details' })
+
+# Send multiple pagers that will be grouped into one incident
+NineOneOne.emergency('Emergency message!', dedup_key: 'Kinda unique key') 
 
 # same for custom configurations
 NineOneOne.use(:my_custom_configuration).notify('Something happened!')
-NineOneOne.use(:my_custom_configuration).emergency('INCIDENT_KEY', 'Emergency message!', { optional_hash: 'with details' })
+NineOneOne.use(:my_custom_configuration).emergency('Emergency message!', details_hash: { optional_hash: 'with details' })
 ```
 
 ## Development
@@ -89,6 +92,8 @@ NineOneOne.use(:my_custom_configuration).emergency('INCIDENT_KEY', 'Emergency me
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 # Changelog
+
+2.0.0 Change the interface to have default parameters. Introduce dedup_key. It's backwards incompatible again.
 
 1.0.0 Migrate to Pager Duty Events API V2 (backwards incompatible!) and add support for slack hash message.
 

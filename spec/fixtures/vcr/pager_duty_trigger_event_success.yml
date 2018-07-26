@@ -6,7 +6,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"routing_key":"PAGER_DUTY_API_INTEGRATION_TOKEN","event_action":"trigger","payload":{"summary":"Incident
-        description","severity":"error","source":"source info","custom_details":{"backtrace":"log"}}}'
+        description","source":"source info","severity":"error","custom_details":{"backtrace":"log"}}}'
     headers:
       Content-Type:
       - application/json
@@ -24,7 +24,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Thu, 22 Feb 2018 13:10:14 GMT
+      - Tue, 24 Jul 2018 12:40:57 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -33,7 +33,7 @@ http_interactions:
       - keep-alive
     body:
       encoding: ASCII-8BIT
-      string: '{"status":"success","message":"Event processed","dedup_key":"4a820d9dff4f44cf996789f0b1d3e1df"}'
+      string: '{"status":"success","message":"Event processed","dedup_key":"f7603b226f1d4fc69b7ff77fd1fc351a"}'
     http_version: 
-  recorded_at: Thu, 22 Feb 2018 13:10:14 GMT
+  recorded_at: Tue, 24 Jul 2018 12:40:58 GMT
 recorded_with: VCR 3.0.3

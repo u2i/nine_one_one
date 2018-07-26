@@ -6,7 +6,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"routing_key":"PAGER_DUTY_API_INTEGRATION_TOKEN","event_action":"trigger","payload":{"summary":"Incident
-        description","severity":"error","source":null,"custom_details":{}}}'
+        description","severity":"error","custom_details":{}}}'
     headers:
       Content-Type:
       - application/json
@@ -24,7 +24,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Thu, 22 Feb 2018 13:13:03 GMT
+      - Tue, 24 Jul 2018 12:40:59 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -36,5 +36,5 @@ http_interactions:
       string: '{"status":"invalid event","message":"Event object is invalid","errors":["''payload.source''
         is missing or blank"]}'
     http_version: 
-  recorded_at: Thu, 22 Feb 2018 13:13:03 GMT
+  recorded_at: Tue, 24 Jul 2018 12:40:59 GMT
 recorded_with: VCR 3.0.3
