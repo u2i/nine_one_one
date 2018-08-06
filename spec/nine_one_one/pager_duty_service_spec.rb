@@ -13,8 +13,7 @@ describe NineOneOne::PagerDutyService do
       use_vcr_cassette 'pager_duty_trigger_event_success', match_requests_on: [:body]
 
       it 'calls pager duty service with proper json' do
-        pager_service.trigger_event('Incident description', source: 'source info', details_hash: details_hash,
-                                                            severity: severity)
+        pager_service.trigger_event(message, source: 'source info', details_hash: details_hash, severity: severity)
       end
     end
 
